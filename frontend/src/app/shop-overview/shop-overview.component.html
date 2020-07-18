@@ -1,0 +1,42 @@
+<h2>Proizvodi</h2>
+<br />
+<form>
+    <div class="form-group form-inline">
+        Pretraga:&nbsp;&nbsp;
+        <input style="height: 30px" type="text" class="form-control" id="searchTerm" [(ngModel)]="searchTerm" name="searchTerm">
+    </div>
+    <br />
+    <table class="table table-hover table-striped">
+        <thead>
+            <th>#</th>
+            <th>
+                <span type="button" (click)="sortByName()">Proizvod&nbsp;</span>
+                <span *ngIf="nameSortDir == 'asc'">&#x25B2;</span>
+                <span *ngIf="nameSortDir == 'desc'">&#x25BC;</span>
+            </th>
+            <th>
+                <span type="button" (click)="sortByCompanyName()">Proizvođač&nbsp;</span>
+                <span *ngIf="companySortDir == 'asc'">&#x25B2;</span>
+                <span *ngIf="companySortDir == 'desc'">&#x25BC;</span>
+            </th>
+            <th>Tip</th>
+            <th>Na stanju</th>
+            <th>Ocena</th>
+            <th>Cena</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let product of products; let i = index;">
+                <ng-container
+                    *ngIf="product.name.toLowerCase().includes(searchTerm.toLowerCase()) || product.companyName.toLowerCase().includes(searchTerm.toLowerCase())">
+                    <th scope="row">{{i + 1}}</th>
+                    <td><a [routerLink]="['/prodavnica/proizvodi/', product.id]">{{product.name}}</a></td>
+                    <td>{{product.companyName}}</td>
+                    <td>{{product.type}}</td>
+                    <td>{{product.amount == 0 ? 'Ne' : 'Da'}}</td>
+                    <td>{{product.ratingSum != 0 ? (product.ratingSum / product.ratingCount | number : '.1-1'): '/'}}</td>
+                    <td>{{product.price | number}} RSD</td>
+                </ng-container>
+            </tr>
+        </tbody>
+    </table>
+</form>

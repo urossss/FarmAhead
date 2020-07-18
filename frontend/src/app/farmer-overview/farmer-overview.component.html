@@ -1,0 +1,26 @@
+<h2>Moji rasadnici</h2>
+<br />
+<div *ngIf="gardens == null || gardens.length == 0">
+    Niste dodali nijedan rasadnik.<br>
+    <a [routerLink]="['/poljoprivrednik/novi-rasadnik']">Novi rasadnik</a>
+</div>
+<table class="table table-hover table-striped text-center" *ngIf="gardens != null && gardens.length > 0">
+    <thead>
+        <th>Rasadnik</th>
+        <th>Mesto</th>
+        <th>Broj sadnica</th>
+        <th>Broj slobodnih mesta</th>
+        <th>Količina vode</th>
+        <th>Temperatura</th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let garden of gardens">
+            <td><a href="/poljoprivrednik/rasadnici/{{garden.id}}">{{garden.name}}</a></td>
+            <td>{{garden.place}}</td>
+            <td>{{garden.rows * garden.cols - garden.free}}</td>
+            <td>{{garden.free}}</td>
+            <td [ngClass]="{'text-danger': garden.water < 75}">{{garden.water}}<i>l</i></td>
+            <td [ngClass]="{'text-danger': garden.temperature < 12}">{{garden.temperature}}&deg;C</td>
+        </tr>
+    </tbody>
+</table>

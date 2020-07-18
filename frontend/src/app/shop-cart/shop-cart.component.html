@@ -1,0 +1,61 @@
+<h2>Moja korpa</h2>
+<br>
+<div class="container" *ngIf="products == null || products.length == 0">
+    Nema proizvoda u korpi.
+</div>
+<div *ngIf="products != null && products.length > 0">
+    <div class="container">
+        <form>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Proizvod</th>
+                        <th>Količina</th>
+                        <th>Cena</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let product of products; let i = index;">
+                        <th scope="row">{{i + 1}}</th>
+                        <td><a [routerLink]="['/prodavnica/proizvodi/', product.id]">{{product.name}}</a></td>
+                        <td>{{product.amount | number}}</td>
+                        <td>{{product.price | number}} RSD</td>
+                        <td>
+                            <button type="button" class="btn btn-secondary btn-sm" (click)="removeItem(product)">Izbaci
+                                iz
+                                korpe</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+    <br>
+    <h2>Narudžbina</h2>
+    <br>
+    <div class="container">
+        Ukupna cena: <strong>{{totalPrice | number}} RSD</strong><br>
+        Plaćanje: pouzećem
+        <br>
+        <br>
+        <form>
+            <div class="form-group has-danger">
+                <label for="inputGarden">Izaberi adresu isporuke</label>
+                <select style="width: 50%" class="form-control" id="inputGarden" [(ngModel)]="selectedGarden" name="selectedGarden"
+                    [ngClass]="{'is-invalid' : gardenCheck > 1}">
+                    <option *ngFor="let garden of gardens" value="{{garden}}" [selected]="garden._id == selectedGarden._id">
+                        {{garden.name}}</option>
+                </select>
+                <small class="invalid-feedback">
+                    <span *ngIf="gardenCheck == 2">Ovo polje je obavezno</span>
+                    <span *ngIf="gardenCheck == 3">Morate dodati rasadnik da biste poslali narudžbinu</span>
+                </small>
+            </div>
+            <button class="btn btn-primary" (click)="placeOrder()">Pošalji narudžbinu</button>
+        </form>
+    </div>
+    <br>
+</div>

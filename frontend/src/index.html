@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>FarmAhead</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="assets/icon.png">
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+    crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="https://unpkg.com/ngx-bootstrap/datepicker/bs-datepicker.css">
+
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/minty/bootstrap.min.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <script type='text/javascript'>
+    $(function () {
+      $('body').tooltip({ selector: '[data-toggle="tooltip"]' });
+    });
+
+    // var myDefaultWhiteList = $.fn.popover.Constructor.Default.whiteList;
+    // myDefaultWhiteList.div = ['style'];
+    // myDefaultWhiteList.span = ['class'];
+    // myDefaultWhiteList.table = ['class'];
+    // myDefaultWhiteList.tbody = [];
+    // myDefaultWhiteList.tr = [];
+    // myDefaultWhiteList.td = ['colspan'];
+
+    $(function () {
+      $("[data-toggle=popover]").popover({
+        html: true,
+        trigger: 'manual',
+        animation: false,
+        sanitize: false,
+        content: function () {
+          return $('#popover-content' + $(this).attr('id')).html();
+        }
+      }).on('mouseenter', function () {
+        var _this = this;
+        $(this).popover('show');
+        $('.popover').on('mouseleave', function () {
+          $(_this).popover('hide');
+        });
+      }).on('mouseleave', function () {
+        var _this = this;
+        setTimeout(function () {
+          if (!$('.popover:hover').length) {
+            $(_this).popover('hide');
+          }
+        }, 50);
+      })
+    });
+
+    function closePopoverOpenModal(btn) {
+      $(btn).parent().hide();
+      let tmp = $(btn).attr('id').split('_');
+      let btnName = tmp[0];
+      let row = tmp[2];
+      let col = tmp[3];
+      $('#' + btnName + 'Modal').attr('data-row', row);
+      $('#' + btnName + 'Modal').attr('data-col', col);
+      $('#' + btnName + 'Modal').modal('show');
+    }
+
+    $(document).ready(function () {
+      $('.toast').toast('show');
+    });
+  </script>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE" type="text/javascript"></script>
+
+</head>
+
+<body>
+  <app-root></app-root>
+</body>
+
+</html>

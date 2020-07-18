@@ -1,0 +1,11 @@
+#imgDiv {
+    display: table-cell;
+    height: 300px;
+    width: 4000px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+#goBack:hover {
+    text-decoration: underline;
+}

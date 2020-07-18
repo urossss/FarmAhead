@@ -1,0 +1,129 @@
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary justify-content-between">
+  <div class="container">
+    <a class="navbar-brand" href="/">FarmAhead</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+      aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="navbar-collapse collapse" id="navbarColor01">
+      <ul class="navbar-nav ml-auto">
+        <li *ngIf="userType == null" class="nav-item" [routerLinkActive]="['active']">
+          <a class="nav-link" [routerLink]="['/prijava']" data-toggle="collapse"
+            data-target=".navbar-collapse.show">Prijava</a>
+        </li>
+        <li *ngIf="userType == null" class="nav-item" [routerLinkActive]="['active']">
+          <a class="nav-link" [routerLink]="['/registracija']" data-toggle="collapse"
+            data-target=".navbar-collapse.show">Registracija</a>
+        </li>
+        <li *ngIf="userType == 'poljoprivrednik'" class="nav-item" [routerLinkActive]="['active']">
+          <a class="nav-link" [routerLink]="['/poljoprivrednik/rasadnici']" data-toggle="collapse"
+            data-target=".navbar-collapse.show">Moji rasadnici</a>
+        </li>
+        <li *ngIf="userType == 'poljoprivrednik'" class="nav-item" [routerLinkActive]="['active']">
+          <a class="nav-link" [routerLink]="['/poljoprivrednik/novi-rasadnik']" data-toggle="collapse"
+            data-target=".navbar-collapse.show">Novi rasadnik</a>
+        </li>
+        <li *ngIf="userType == 'poljoprivrednik'" class="nav-item" [routerLinkActive]="['active']">
+          <a class="nav-link" [routerLink]="['/prodavnica']" data-toggle="collapse"
+            data-target=".navbar-collapse.show">Prodavnica</a>
+        </li>
+        <li *ngIf="userType == 'preduzece'" class="nav-item" [routerLinkActive]="['active']">
+          <a class="nav-link" [routerLink]="['/preduzece/narudzbine']" data-toggle="collapse"
+            data-target=".navbar-collapse.show">Narudžbine</a>
+        </li>
+        <li *ngIf="userType == 'preduzece'" class="nav-item" [routerLinkActive]="['active']">
+          <a class="nav-link" [routerLink]="['/preduzece/proizvodi']" data-toggle="collapse"
+            data-target=".navbar-collapse.show">Proizvodi</a>
+        </li>
+        <li *ngIf="userType == 'preduzece'" class="nav-item" [routerLinkActive]="['active']">
+          <a class="nav-link" [routerLink]="['/preduzece/novi-proizvod']" data-toggle="collapse"
+            data-target=".navbar-collapse.show">Novi proizvod</a>
+        </li>
+        <li *ngIf="userType == 'preduzece'" class="nav-item" [routerLinkActive]="['active']">
+          <a class="nav-link" [routerLink]="['/preduzece/statistika']" data-toggle="collapse"
+            data-target=".navbar-collapse.show">Statistika</a>
+        </li>
+        <li *ngIf="userType == 'admin'" class="nav-item" [routerLinkActive]="['active']">
+          <a class="nav-link" [routerLink]="['/admin/zahtevi']" data-toggle="collapse"
+            data-target=".navbar-collapse.show">Zahtevi za registraciju</a>
+        </li>
+        <li *ngIf="userType == 'admin'" class="nav-item" [routerLinkActive]="['active']"
+          [routerLinkActiveOptions]="{ exact: true }">
+          <a class="nav-link" [routerLink]="['/admin/korisnici']" data-toggle="collapse"
+            data-target=".navbar-collapse.show">Lista korisnika</a>
+        </li>
+        <li *ngIf="userType == 'admin'" class="nav-item" [routerLinkActive]="['active']"
+          [routerLinkActiveOptions]="{ exact: true }">
+          <a class="nav-link" [routerLink]="['/admin/korisnici/dodaj']" data-toggle="collapse"
+            data-target=".navbar-collapse.show">Dodaj korisnika</a>
+        </li>
+        <li *ngIf="userType != null" class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown">Moj nalog</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" [routerLink]="['/promena-lozinke']" data-toggle="collapse"
+              data-target=".navbar-collapse.show">Promena lozinke</a>
+            <div class="dropdown-divider"></div>
+            <form>
+              <button type="button" class="dropdown-item" (click)="logout()" data-toggle="collapse"
+                data-target=".navbar-collapse.show">Izloguj se</button>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div style="margin-top: 100px;" class="container">
+  <router-outlet (activate)="changeOfRoutes()"></router-outlet>
+  <br />
+</div>
+
+<footer id="sticky-footer" class="footer bg-light">
+
+  <div class="container text-center text-md-left mt-4">
+
+    <div class="row dark-grey-text mx-auto">
+
+      <div class="col-md-4 col-lg-4 col-xl-4 text-center">
+        <h6 class="text-uppercase font-weight-bold">FarmAhead</h6>
+        <hr class="teal accent-3 mb-3 mt-0 d-inline-block mx-auto" style="width: 60px;">
+        <p>FarmAhead je u Srbiji i regionu vodeći sajt za poljoprivrenike i preduzeća koja prodaju sadnice i preparate.</p>
+      </div>
+
+      <div class="col-md-4 col-lg-4 col-xl-4 mx-auto text-center">
+        <h6 class="text-uppercase font-weight-bold">Korisni linkovi</h6>
+        <hr class="teal accent-3 mb-3 mt-0 d-inline-block mx-auto" style="width: 60px;">
+        <p><a class="dark-grey-text" [routerLink]="['/poljoprivrednik']">Poljoprivrednici</a></p>
+        <p><a class="dark-grey-text" [routerLink]="['/preduzece']">Preduzeća</a></p>
+        <p><a class="dark-grey-text" [routerLink]="['/prodavnica']">Prodavnica</a></p>
+      </div>
+
+      <div class="col-md-4 col-lg-4 col-xl-4 mx-auto text-center">
+        <h6 class="text-uppercase font-weight-bold">Kontakt</h6>
+        <hr class="teal accent-3 mb-3 mt-0 d-inline-block mx-auto" style="width: 60px;">
+        <p>Bulevar kralja Aleksandra 73,<br />11120 Beograd, Srbija</p>
+        <p>farmahead.info@gmail.com</p>
+        <p>+381 11 111 111</p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="text-center py-2">© 2020 Copyright:
+    <a class="dark-grey-text" [routerLink]="['/']"> FarmAhead.com</a>
+  </div>
+
+</footer>
+
+
+<div [hidden]="!myShowToast" role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="false" style="position: fixed; bottom: 20px; right: 20px;">
+  <div class="toast-header bg-danger text-white">
+      <strong class="mr-auto">Pažnja!</strong>
+  </div>
+  <div class="toast-body bg-danger text-white">
+      Neki rasadnik zahteva održavanje.
+  </div>
+</div>

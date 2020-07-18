@@ -1,0 +1,67 @@
+<h2>Zahtevi za registraciju</h2>
+<br />
+<p *ngIf="users == null || users.length == 0">Nema novih zahteva za registraciju.</p>
+<table class="table table-hover" *ngIf="users != null && users.length > 0">
+    <thead>
+        <th style="width: 10%">#</th>
+        <th style="width: 60%" class="text-center">Zahtev</th>
+        <th style="width: 15%"></th>
+        <th style="width: 15%"></th>
+    </thead>
+    <tbody>
+        <tr style="vertical-align: center" *ngFor="let user of users; let i = index">
+            <th scope="row">{{i + 1}}</th>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td>Tip korisnika:</td>
+                        <td class="text-right">{{user.type == 'poljoprivrednik' ? 'Poljoprivrednik' : 'Preduzeće'}}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span>{{user.type == 'poljoprivrednik' ? 'Ime i prezime:' : 'Naziv preduzeća:'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span *ngIf="user.type == 'poljoprivrednik'">{{user.firstName + ' ' + user.lastName}}</span>
+                            <span *ngIf="user.type == 'preduzece'">{{user.fullName}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Korisničko ime:</td>
+                        <td class="text-right">{{user.username}}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span>{{user.type == 'poljoprivrednik' ? 'Datum rođenja:' : 'Datum osnivanja:'}}</span>
+                        </td>
+                        <td class="text-right">{{user.date | date : "dd MMM yyyy"}}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span>{{user.type == 'poljoprivrednik' ? 'Mesto rođenja:' : 'Mesto preduzeća:'}}</span>
+                        </td>
+                        <td class="text-right">{{user.place}}</td>
+                    </tr>
+                    <tr *ngIf="user.type == 'poljoprivrednik'">
+                        <td>Broj telefona:</td>
+                        <td class="text-right">+381 {{user.phone}}</td>
+                    </tr>
+                    <tr>
+                        <td>Email adresa:</td>
+                        <td class="text-right">{{user.email}}</td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <form class="form-group text-center">
+                    <button style="width: 100%" type="button" class="btn btn-success btn-sm" (click)="accept(user.username)">Prihvati</button>
+                </form>
+            </td>
+            <td>
+                <form class="form-group text-center">
+                    <button style="width: 100%" type="button" class="btn btn-danger btn-sm" (click)="reject(user.username)">Odbaci</button>
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>

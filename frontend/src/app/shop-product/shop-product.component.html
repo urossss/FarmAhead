@@ -1,0 +1,100 @@
+<h2>{{product.name}}</h2>
+<br />
+<div class="container">
+    <div class="row justify-content-between">
+        <table class="table" style="width: 50%">
+            <tbody>
+                <tr>
+                    <th scope="row">Proizvođač: </th>
+                    <td class="text-right">{{product.companyName}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Tip: </th>
+                    <td class="text-right">{{product.type}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Količina na stanju: </th>
+                    <td class="text-right">{{product.amount}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Prosečna ocena: </th>
+                    <td class="text-right">
+                        {{product.ratingSum == 0 ? '/' : (product.ratingSum / product.ratingCount | number : '.1-1') + ' (broj ocena: ' + product.ratingCount + ')'}}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Cena: </th>
+                    <td class="text-right">{{product.price | number}} RSD</td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <ng-container *ngIf="userType == 'poljoprivrednik'">
+                <button style="width: 150px" type="button" class="btn btn-info btn-sm"
+                    [routerLink]="['/prodavnica/korpa']">Moja korpa</button><br /><br />
+                Količina: <input style="height: 35px" type="number" value="0" min="0" max="{{product.amount}}"
+                    class="form-control" [(ngModel)]="amount"><br />
+                <button style="width: 150px" type="button" class="btn btn-primary btn-sm" (click)="addToCart()">Dodaj u
+                    korpu</button><br /><br />
+                <button style="width: 150px" type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                    data-target="#commentModal">Ostavi komentar</button><br />
+            </ng-container>
+        </div>
+    </div>
+</div>
+
+<br>
+<h3>Utisci kupaca</h3>
+<div class="container">
+    <hr>
+    <div *ngFor="let comment of product.comments">
+        <b>{{comment.farmer}}</b>, poljoprivrednik<br>
+        Ocena: {{comment.rating}}<br>
+        Komentar: {{comment.comment}}
+        <hr>
+    </div>
+</div>
+
+
+<div #commentModal id="commentModal" class="modal">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Oceni proizvod i ostavi komentar</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" *ngIf="!hasBought">
+                Ne možete ostaviti komentar ako niste kupili proizvod.
+            </div>
+            <div class="modal-body" *ngIf="hasCommented">
+                Već ste ostavili komentar za ovaj proizvod.
+            </div>
+            <div class="modal-body" *ngIf="hasBought && !hasCommented">
+                <form>
+                    <div class="form-group has-danger has-success">
+                        <label for="inputRating" class="col-form-label">Ocena:</label>
+                        <input type="number" min="1" max="10" class="form-control" id="inputRating" name="inputRating"
+                            [(ngModel)]="rating"
+                            [ngClass]="{'is-invalid': ratingCheck > 1, 'is-valid': ratingCheck == 1}">
+                        <small class="invalid-feedback">
+                            <span *ngIf="ratingCheck == 2">Unesite ocenu od 1 do 10</span>
+                            <span *ngIf="ratingCheck == 3">Ocena mora biti ceo broj</span>
+                        </small>
+                    </div>
+                    <div class="form-group has-danger has-success">
+                        <label for="inputComment" class="col-form-label">Komentar:</label>
+                        <textarea class="form-control" id="inputComment" name="inputComment" [(ngModel)]="comment"
+                            [ngClass]="{'is-invalid': commentCheck > 1, 'is-valid': commentCheck == 1}"></textarea>
+                        <small class="invalid-feedback">Ovo polje ne sme biti prazno</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer text-center">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Otkaži</button>
+                <button *ngIf="hasBought && !hasCommented" type="button" class="btn btn-primary" (click)="addComment()">Potvrdi</button>
+            </div>
+        </div>
+    </div>
+</div>

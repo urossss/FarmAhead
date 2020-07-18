@@ -1,0 +1,56 @@
+<h2>Narudžbine</h2>
+<br>
+<div class="container" *ngIf="orders == null || orders.length == 0">
+    Nema evidentiranih narudžbina.
+</div>
+<div class="container" *ngIf="orders != null && orders.length > 0">
+    <form>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th style="width: 6%">#</th>
+                    <th style="width: 50%" class="text-center">Narudžbina</th>
+                    <th style="width: 14%" class="text-center">
+                        <span type="button" (click)="sortByDate()">Datum&nbsp;</span>
+                        <span *ngIf="dateSortDir == 'asc'">&#x25B2;</span>
+                        <span *ngIf="dateSortDir == 'desc'">&#x25BC;</span>
+                    </th>
+                    <th style="width: 10%">Status</th>
+                    <th style="width: 10%"></th>
+                    <th style="width: 10%"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let order of orders; let i = index" [ngClass]="{'table-warning': getStatus(order) == 'NA ČEKANJU'}">
+                    <th scope="row">{{i + 1}}</th>
+                    <td>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40%">Proizvod</th>
+                                    <th style="width: 30%" class="text-center">Količina</th>
+                                    <th style="width: 30%" class="text-center">Cena</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let product of order.products">
+                                    <td>{{product.name}}</td>
+                                    <td class="text-center">{{product.amount}}</td>
+                                    <td class="text-center">{{product.price | number}} RSD</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="text-center">{{order.orderDate | date : "d MMM yyyy"}}</td>
+                    <td>{{getStatus(order)}}</td>
+                    <td>
+                        <button *ngIf="getStatus(order) == 'NOVO'" style="width: 100%" type="button" class="btn btn-success btn-sm" (click)="acceptOrder(order)">Prihvati</button>
+                    </td>
+                    <td>
+                        <button *ngIf="getStatus(order) == 'NOVO'" style="width: 100%" type="button" class="btn btn-danger btn-sm" (click)="rejectOrder(order)">Odbaci</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>

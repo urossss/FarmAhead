@@ -1,0 +1,301 @@
+<h2>Kontrolna tabla</h2>
+<br>
+
+<form>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th style="width: 70%" scope="row">Količina vode u rasadniku:</th>
+                <td style="width: 10%" class="text-center"><i type="button" class="fa fa-minus" aria-hidden="true"
+                        (click)="updateWater(-1)"></i></td>
+                <td style="width: 10%" class="text-center">{{water}}<i>l</i></td>
+                <td style="width: 10%" class="text-center"><i type="button" class="fa fa-plus" aria-hidden="true"
+                        (click)="updateWater(1)"></i></td>
+            </tr>
+            <tr>
+                <th scope="row">Trenutna temperatura:</th>
+                <td class="text-center"><i type="button" class="fa fa-minus" aria-hidden="true"
+                        (click)="updateTemperature(-1)"></i></td>
+                <td class="text-center">{{temperature}}&deg;C</td>
+                <td class="text-center"><i type="button" class="fa fa-plus" aria-hidden="true"
+                        (click)="updateTemperature(1)"></i></td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <button class="btn btn-primary" (click)="saveChanges()">Sačuvaj</button>
+                    &nbsp;
+                    <button class="btn btn-secondary" (click)="discardChanges()">Poništi</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
+<br>
+<br>
+
+<h2>Sadnice</h2>
+<br>
+
+<div class="scrollable">
+    <table id="myDataTable" class="table table-fixed table-hover-cells text-center" width="100%">
+        <tbody>
+            <tr *ngFor="let plantRow of plants; let row = index;">
+                <td *ngFor="let plant of plantRow; let col = index;">
+                    <img id="1_{{row}}_{{col}}" *ngIf="getPlantState(plant) == 1" src="../assets/plants/plant_1.jpg"
+                        data-placement="bottom" data-toggle="popover" data-container="body" type="button"
+                        data-html="true" data-trigger="hover focus">
+                    <img id="2_{{row}}_{{col}}" *ngIf="getPlantState(plant) == 2" src="../assets/plants/plant_2.jpg"
+                        data-placement="bottom" data-toggle="popover" data-container="body" type="button"
+                        data-html="true" data-trigger="hover focus">
+                    <img id="3_{{row}}_{{col}}" *ngIf="getPlantState(plant) == 3" src="../assets/plants/plant_3.jpg"
+                        data-placement="bottom" data-toggle="popover" data-container="body" type="button"
+                        data-html="true" data-trigger="hover focus">
+                    <img id="4_{{row}}_{{col}}" *ngIf="getPlantState(plant) == 4" src="../assets/plants/plant_4.jpg"
+                        data-placement="bottom" data-toggle="popover" data-container="body" type="button"
+                        data-html="true" data-trigger="hover focus">
+
+                    <div id="popover-content1_{{row}}_{{col}}" [hidden]="true">
+                        <h6>Ovo mesto je slobodno, može se posaditi nova sadnica</h6>
+                        <form class="form-group text-center">
+                            <button id="newplant_button_{{row}}_{{col}}" type="button"
+                                class="btn btn-sm btn-primary btn-new-plant" onclick="closePopoverOpenModal(this)">Nova
+                                sadnica</button>
+                        </form>
+                    </div>
+                    <div id="popover-content2_{{row}}_{{col}}" *ngIf="plant != null" [hidden]="true"
+                        style="display: none;">
+                        <h6>{{plant.name}} - raste</h6>
+                        Proizvođač: {{plant.companyName}}<br>
+                        Progres:<br>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                                role="progressbar" [style.width.%]="getPlantProgress(plant)"></div>
+                        </div>
+                        <br>
+                        <form class="form-group text-center">
+                            <button id="preparation_button_{{row}}_{{col}}" type="button"
+                                class="btn btn-sm btn-info btn-add-preparation"
+                                onclick="closePopoverOpenModal(this)">Dodaj preparate</button>
+                        </form>
+                    </div>
+                    <div id="popover-content3_{{row}}_{{col}}" *ngIf="plant != null" [hidden]="true">
+                        <h6>{{plant.name}} - spremna za presađivanje</h6>
+                        <form class="form-group text-center">
+                            <button id="takeout_button_{{row}}_{{col}}" type="button"
+                                class="btn btn-sm btn-secondary btn-add-preparation"
+                                onclick="closePopoverOpenModal(this)">Izvadi iz zemlje</button>
+                        </form>
+                    </div>
+                    <div id="popover-content4_{{row}}_{{col}}" *ngIf="plant != null" [hidden]="true">
+                        <h6>Sadnica je tek izvađena, još uvek se ne može posaditi nova.</h6>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div #preparationModal id="preparationModal" class="modal">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Izaberi preparate</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" *ngIf="!hasValidStoragePreparations()">
+                Nema preparata na stanju.
+            </div>
+            <div class="modal-body" *ngIf="hasValidStoragePreparations()">
+                <table class="table text-center">
+                    <thead>
+                        <th>Naziv preparata</th>
+                        <th>Proizvođač</th>
+                        <th>Efekat (u danima)</th>
+                        <th>Količina na stanju</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let preparation of garden.products">
+                            <ng-container
+                                *ngIf="preparation.type=='preparat' && getProductState(preparation) == preparation.amount">
+                                <td>{{preparation.name}}</td>
+                                <td>{{preparation.companyName}}</td>
+                                <td>{{preparation.time}}</td>
+                                <td>{{preparation.amount}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" (click)="addPreparation(preparation)"
+                                        data-dismiss="modal">Dodaj</button>
+                                </td>
+                            </ng-container>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer text-center">
+                <button type="button" class="btn btn-info" data-dismiss="modal"
+                    [routerLink]="['/prodavnica']">Prodavnica</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Otkaži</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div #newplantModal id="newplantModal" class="modal">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Izaberi sadnicu</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" *ngIf="!hasValidStoragePlants()">
+                Nema sadnica na stanju.
+            </div>
+            <div class="modal-body" *ngIf="hasValidStoragePlants()">
+                <table class="table text-center">
+                    <thead>
+                        <th>Naziv sadnice</th>
+                        <th>Proizvođač</th>
+                        <th>Vreme rasta (u danima)</th>
+                        <th>Količina na stanju</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let plant of garden.products">
+                            <ng-container *ngIf="plant.type == 'sadnica' && getProductState(plant) == plant.amount">
+                                <td>{{plant.name}}</td>
+                                <td>{{plant.companyName}}</td>
+                                <td>{{plant.time}}</td>
+                                <td>{{plant.amount}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" (click)="addNewPlant(plant)"
+                                        data-dismiss="modal">Posadi</button>
+                                </td>
+                            </ng-container>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer text-center">
+                <button type="button" class="btn btn-info" data-dismiss="modal"
+                    [routerLink]="['/prodavnica']">Prodavnica</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Otkaži</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div #takeoutModal id="takeoutModal" class="modal">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Izvadi sadnicu iz zemlje?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer text-center">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Otkaži</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                    (click)="takeoutPlant()">Izvadi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div #cancelOrderModal id="cancelOrderModal" class="modal">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Da li želiš da otkažeš ovu narudžbinu?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <th>Proizvod</th>
+                        <th>Količina</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let product of garden.products">
+                            <ng-container *ngIf="product.orderId == selectedOrderId">
+                                <td>{{product.name}}</td>
+                                <td>{{product.amount}}</td>
+                            </ng-container>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer text-center">
+                <button style="width: 100px" type="button" class="btn btn-danger" data-dismiss="modal">Ne</button>
+                <button style="width: 100px" type="button" class="btn btn-success" data-dismiss="modal"
+                    (click)="cancelOrder()">Da</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+<h2>Magacin</h2>
+<br>
+
+<div class="container" *ngIf="garden.products == null || !garden.products.length">
+    Nema proizvoda u magacinu.<br>
+    <a class="text-info" [routerLink]="['/prodavnica']">Prodavnica</a>
+</div>
+<form *ngIf="garden.products != null && garden.products.length > 0">
+    <div class="form-group form-inline">
+        Pretraga:&nbsp;&nbsp;
+        <input style="height: 30px" type="text" class="form-control" id="searchTerm" [(ngModel)]="searchTerm"
+            name="searchTerm">
+    </div>
+    <br />
+    <table class="table table-hover table-striped">
+        <thead>
+            <th>#</th>
+            <th>
+                <span type="button" (click)="sortByName()">Proizvod&nbsp;</span>
+                <span *ngIf="nameSortDir == 'asc'">&#x25B2;</span>
+                <span *ngIf="nameSortDir == 'desc'">&#x25BC;</span>
+            </th>
+            <th>
+                <span type="button" (click)="sortByCompanyName()">Proizvođač&nbsp;</span>
+                <span *ngIf="companySortDir == 'asc'">&#x25B2;</span>
+                <span *ngIf="companySortDir == 'desc'">&#x25BC;</span>
+            </th>
+            <th>Tip</th>
+            <th>
+                <span type="button" (click)="sortByAmount()">Stanje&nbsp;</span>
+                <span *ngIf="amountSortDir == 'asc'">&#x25B2;</span>
+                <span *ngIf="amountSortDir == 'desc'">&#x25BC;</span>
+            </th>
+            <th></th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let product of garden.products; let i = index;">
+                <ng-container
+                    *ngIf="product.name.toLowerCase().includes(searchTerm.toLowerCase()) || product.companyName.toLowerCase().includes(searchTerm.toLowerCase())">
+                    <th scope="row">{{i + 1}}</th>
+                    <td>{{product.name}}</td>
+                    <td>{{product.companyName}}</td>
+                    <td>{{product.type}}</td>
+                    <td>{{getProductState(product)}}</td>
+                    <td>
+                        <button *ngIf="getProductState(product) != product.amount" type="button"
+                            class="btn btn-danger btn-sm" data-toggle="modal" data-target="#cancelOrderModal"
+                            (click)="selectOrderId(product.orderId)">Otkaži narudžbinu</button>
+                    </td>
+                </ng-container>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
+<br>

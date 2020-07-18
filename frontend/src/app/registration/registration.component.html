@@ -1,0 +1,158 @@
+<h2>Registracija korisnika</h2>
+<br>
+<div class="container col-10">
+    <form>
+        <div class="alert alert-success" *ngIf="registrationSuccessful">
+            <h4 class="alert-heading">Uspešno ste podneli zahtev za registraciju!</h4>
+            Moći ćete da se prijavite u sistem čim administrator odobri Vaše članstvo. Hvala na razumevanju.
+            <a [routerLink]="['/']" class="alert-link">Početna strana</a>
+        </div>
+
+        <div class="form-group">
+            <label for="inputType">Tip korisnika</label>
+            <select class="form-control" id="inputType" [(ngModel)]="type" name="type" (change)="resetAllFields()">
+                <option value='poljoprivrednik' [selected]="type == 'poljoprivrednik'">Poljoprivrednik</option>
+                <option value='preduzece' [selected]="type == 'preduzece'">Preduzeće</option>
+            </select>
+        </div>
+
+        <div class="form-group has-danger has-success" *ngIf="type == 'poljoprivrednik'">
+            <label for="firstName">Ime</label>
+            <input type="text" class="form-control"
+                [ngClass]="{'is-invalid': firstNameCheck == 2, 'is-valid': firstNameCheck == 1}" id="firstName"
+                placeholder="Unesite ime" [(ngModel)]="firstName" name="firstName" required>
+            <small id="firstNameMsg" class="invalid-feedback">
+                Ovo polje je obavezno
+            </small>
+        </div>
+
+        <div class="form-group has-danger has-success" *ngIf="type == 'poljoprivrednik'">
+            <label for="inputLastName">Prezime</label>
+            <input type="text" class="form-control"
+                [ngClass]="{'is-invalid': lastNameCheck == 2, 'is-valid': lastNameCheck == 1}" id="inputLastName"
+                placeholder="Unesite prezime" [(ngModel)]="lastName" name="lastName" required>
+            <small id="lastNameMsg" class="invalid-feedback">
+                Ovo polje je obavezno
+            </small>
+        </div>
+
+        <div class="form-group has-danger has-success" *ngIf="type == 'preduzece'">
+            <label for="inputFullName">Naziv preduzeća</label>
+            <input type="text" class="form-control" id="inputFullName"
+                [ngClass]="{'is-invalid': fullNameCheck == 2, 'is-valid': fullNameCheck == 1}" [(ngModel)]="fullName"
+                name="fullName" required placeholder="Unesite pun naziv preduzeća">
+            <small id="lastNameMsg" class="invalid-feedback">
+                Ovo polje je obavezno
+            </small>
+        </div>
+
+        <div class="form-group has-danger has-success">
+            <label for="inputUsername">
+                <span *ngIf="type == 'poljoprivrednik'">Korisničko ime</span>
+                <span *ngIf="type == 'preduzece'">Korisničko ime (skraćeni naziv preduzeća)</span>
+            </label>
+            <input type="text" class="form-control" id="inputUsername" placeholder="Unesite korisničko ime"
+                [ngClass]="{'is-invalid': usernameCheck > 1, 'is-valid': usernameCheck == 1}" [(ngModel)]="username"
+                name="username" required>
+            <small id="usernameMsg" class="invalid-feedback">
+                <span *ngIf="usernameCheck == 2">Ovo polje je obavezno</span>
+                <span *ngIf="usernameCheck == 3">Korisničko ime je zauzeto</span>
+            </small>
+        </div>
+
+        <div class="form-group has-danger has-success">
+            <label for="inputPassword1">Lozinka</label>
+            <input type="password" class="form-control" id="inputPassword1" placeholder="Unesite lozinku"
+                [ngClass]="{'is-invalid': passwordCheck > 1, 'is-valid': passwordCheck == 1}" [(ngModel)]="password"
+                name="password" required>
+            <small id="password1Msg" class="invalid-feedback">
+                <span *ngIf="passwordCheck == 2">Ovo polje je obavezno</span>
+                <span *ngIf="passwordCheck == 3">Unete lozinke se ne poklapaju</span>
+                <span *ngIf="passwordCheck == 4">Lozinka mora imati najmanje 7 karaktera, od toga bar 1 veliko slovo, 1
+                    broj, 1 specijalni karakter i mora počinjati slovom</span>
+            </small>
+        </div>
+
+        <div class="form-group has-danger has-success">
+            <label for="inputPassword2">Potvrda lozinke</label>
+            <input type="password" class="form-control" id="inputPassword2" placeholder="Potvrdite lozinku"
+                [ngClass]="{'is-invalid': passwordConfirmationCheck > 1, 'is-valid': passwordConfirmationCheck == 1}"
+                [(ngModel)]="passwordConfirmation" name="passwordConfirmation" required>
+            <small id="password2Msg" class="invalid-feedback">
+                <span *ngIf="passwordConfirmationCheck == 2">Ovo polje je obavezno</span>
+                <span *ngIf="passwordConfirmationCheck == 3">Unete lozinke se ne poklapaju</span>
+                <span *ngIf="passwordConfirmationCheck == 4">Lozinka mora imati najmanje 7 karaktera, od toga bar 1
+                    veliko slovo, 1 broj, 1 specijalni karakter i mora počinjati slovom</span>
+            </small>
+        </div>
+
+        <div class="form-group has-danger has-success">
+            <label for="inputDate">
+                <span *ngIf="type == 'poljoprivrednik'">Datum rođenja</span>
+                <span *ngIf="type == 'preduzece'">Datum osnivanja preduzeća</span>
+            </label>
+            <input autocomplete="off" id="datePicker" type="text" class="form-control" #dp="bsDatepicker" bsDatepicker
+                [bsConfig]="{ adaptivePosition: true }" placeholder="Unesite datum"
+                [ngClass]="{'is-invalid': dateCheck > 1, 'is-valid': dateCheck == 1}" [(ngModel)]="date" name="date"
+                required>
+            <small id="dateMsg" class="invalid-feedback">
+                <span *ngIf="dateCheck == 2">Ovo polje je obavezno</span>
+                <span *ngIf="dateCheck == 3">Uneti datum nije ispravan</span>
+            </small>
+        </div>
+
+        <div class="form-group has-danger has-success">
+            <label for="inputPlace">
+                <span *ngIf="type == 'poljoprivrednik'">Mesto rođenja</span>
+                <span *ngIf="type == 'preduzece'">Mesto preduzeća</span>
+            </label>
+            <input type="text" class="form-control" id="inputPlace" placeholder="Unesite mesto"
+                [ngClass]="{'is-invalid': placeCheck > 1, 'is-valid': placeCheck == 1}" [(ngModel)]="place" name="place"
+                required>
+            <small id="placeMsg" class="invalid-feedback">
+                <span *ngIf="placeCheck == 2">Ovo polje je obavezno</span>
+            </small>
+        </div>
+
+        <div class="form-group has-danger has-success" *ngIf="type == 'poljoprivrednik'">
+            <label class="control-label">Kontakt telefon</label>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend" id="phone-prepend">
+                    <span class="input-group-text">+381</span>
+                </div>
+                <input type="text" class="form-control rounded-right" placeholder="Unesite broj telefona"
+                    aria-describedby="phone-prepend"
+                    [ngClass]="{'is-invalid': phoneCheck > 1, 'is-valid': phoneCheck == 1}" [(ngModel)]="phone"
+                    name="phone" required>
+                <small id="phoneMsg" class="invalid-feedback">
+                    <span *ngIf="phoneCheck == 2">Ovo polje je obavezno</span>
+                    <span *ngIf="phoneCheck == 3">Uneti broj telefona nije u ispravnom formatu</span>
+                </small>
+            </div>
+        </div>
+
+        <div class="form-group has-danger has-success">
+            <label for="inputEmail">Email adresa</label>
+            <input type="email" class="form-control" id="inputEmail" placeholder="Unesite email adresu"
+                [ngClass]="{'is-invalid': emailCheck > 1, 'is-valid': emailCheck == 1}" [(ngModel)]="email" name="email"
+                required>
+            <small id="emailMsg" class="invalid-feedback">
+                <span *ngIf="emailCheck == 2">Ovo polje je obavezno</span>
+                <span *ngIf="emailCheck == 3">Uneta email adresa nije u ispravnom formatu</span>
+            </small>
+        </div>
+
+        <div class="form-group">
+            <re-captcha [(ngModel)]="captcha" name="captcha" required siteKey="6LeQD6kZAAAAAPw1LGvC8zXva8lgyDEvy33k9p2I"
+                #captchaControl="ngModel"></re-captcha>
+            <small id="captchaMsg" class="text-danger"
+                *ngIf="captchaCheck == 2">Ovo polje je
+                obavezno</small>
+        </div>
+
+        <div class="form-group d-flex justify-content-between">
+            <div><button type="submit" class="btn btn-primary" (click)="submit()">Registracija</button></div>
+            <div><span>Imate nalog? <a [routerLink]="['/prijava']">Prijavite se</a></span></div>
+        </div>
+    </form>
+</div>

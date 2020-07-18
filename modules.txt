@@ -1,0 +1,17 @@
+frontend:
+	npm install ngx-bootstrap --save
+	npm install ng-recaptcha --save
+	ng add @angular/material (Custom > No > No + remove font imports in index.html)
+	npm install @types/googlemaps (+ add "googlemaps" to "types" in tsconfig.app.json file)
+	npm install ng2-charts
+	npm install chart.js
+
+	start:	ng serve
+
+backend:
+	npm install typescript
+	npm install request
+	npm install nodemailer
+
+	start:	tsc
+		npm run serve

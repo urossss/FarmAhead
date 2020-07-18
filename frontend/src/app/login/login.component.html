@@ -1,0 +1,30 @@
+<h2>Prijava korisnika</h2>
+<br>
+<div class="container col-10">
+    <div class="form-group has-danger has-success">
+        <label for="inputUsername">Korisničko ime</label>
+        <input type="text" class="form-control" id="inputUsername" placeholder="Unesite korisničko ime"
+            [ngClass]="{'is-invalid': usernameCheck > 1, 'is-valid': usernameCheck == 1}" [(ngModel)]="username"
+            name="username" required>
+        <small id="usernameMsg" class="invalid-feedback">
+            <span *ngIf="usernameCheck == 2">Ovo polje je obavezno</span>
+            <span *ngIf="usernameCheck == 3">Pogrešno korisničko ime ili lozinka</span>
+        </small>
+    </div>
+
+    <div class="form-group has-danger has-success">
+        <label for="inputPassword">Lozinka</label>
+        <input type="password" class="form-control" id="inputPassword" placeholder="Unesite lozinku"
+            [ngClass]="{'is-invalid': passwordCheck > 1, 'is-valid': passwordCheck == 1}" [(ngModel)]="password"
+            name="password" required>
+        <small id="password1Msg" class="invalid-feedback">
+            <span *ngIf="passwordCheck == 2">Ovo polje je obavezno</span>
+            <span *ngIf="passwordCheck == 3">Pogrešno korisničko ime ili lozinka</span>
+        </small>
+    </div>
+
+    <div class="form-group d-flex justify-content-between">
+        <div><button type="submit" class="btn btn-primary" (click)="login()">Prijava</button></div>
+        <div><span>Nemate nalog? <a [routerLink]="['/registracija']">Registrujte se</a></span></div>
+    </div>
+</div>

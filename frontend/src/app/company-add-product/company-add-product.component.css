@@ -1,0 +1,7 @@
+::ng-deep .mat-vertical-stepper-header .mat-step-icon-selected {
+    background-color: #78C2AD;
+}
+
+::ng-deep .mat-vertical-stepper-header{
+    pointer-events: none !important;
+}

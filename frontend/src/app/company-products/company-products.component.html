@@ -1,0 +1,93 @@
+<h2>Proizvodi</h2>
+<br />
+<form>
+    <div class="form-group form-inline">
+        Pretraga:&nbsp;&nbsp;
+        <input style="height: 30px" type="text" class="form-control" id="searchTerm" [(ngModel)]="searchTerm"
+            name="searchTerm">
+    </div>
+    <table class="table table-hover table-striped">
+        <thead>
+            <th>#</th>
+            <th>
+                <span type="button" (click)="sortByName()">Proizvod&nbsp;</span>
+                <span *ngIf="nameSortDir == 'asc'">&#x25B2;</span>
+                <span *ngIf="nameSortDir == 'desc'">&#x25BC;</span>
+            </th>
+            <th>Tip</th>
+            <th class="text-center">Količina na stanju</th>
+            <th colspan="2"></th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let product of products; let i = index;">
+                <ng-container *ngIf="product.name.toLowerCase().includes(searchTerm.toLowerCase())">
+                    <th scope="row">{{i + 1}}</th>
+                    <td><a [routerLink]="['/prodavnica/proizvodi/', product.id]">{{product.name}}</a></td>
+                    <td>{{product.type}}</td>
+                    <td class="text-center">{{product.amount}}</td>
+                    <td>
+                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
+                            data-target="#addAmountModal" (click)="selectProduct(product, true)">Dodaj na
+                            stanje</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                            data-target="#removeProductModal" (click)="selectProduct(product, false)">Povuci iz
+                            prodaje</button>
+                    </td>
+                </ng-container>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
+<div #removeProductModal id="removeProductModal" class="modal">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Povuci proizvod <i>{{selectedProduct == null ? '' : selectedProduct.name}}</i>
+                    iz prodaje?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer text-center">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Otkaži</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                    (click)="removeProduct()">Potvrdi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div #addAmountModal id="addAmountModal" class="modal">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Dodaj proizvod <i>{{selectedProduct == null ? '' : selectedProduct.name}}</i> na
+                    stanje</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group has-danger has-success">
+                        <label for="inputAmount" class="col-form-label">Unesite količinu:</label>
+                        <input type="number" min="1" class="form-control" id="inputAmount" name="inputAmount"
+                            [(ngModel)]="amount"
+                            [ngClass]="{'is-invalid': amountCheck > 1, 'is-valid': amountCheck == 1}">
+                        <small class="invalid-feedback">
+                            <span *ngIf="amountCheck == 2">Unesite količinu veću od 0</span>
+                            <span *ngIf="amountCheck == 3">Količina mora biti ceo broj</span>
+                        </small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer text-center">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Otkaži</button>
+                <button type="button" class="btn btn-primary" (click)="addAmount()">Dodaj</button>
+            </div>
+        </div>
+    </div>
+</div>

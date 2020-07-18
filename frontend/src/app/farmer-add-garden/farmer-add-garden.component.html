@@ -1,0 +1,58 @@
+<h2>Novi rasadnik</h2>
+<br>
+<div class="container col-10">
+    <form>
+        <div class="alert alert-success alert-dismissible" *ngIf="successful">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <h4 class="alert-heading">Uspešno ste dodali rasadnik!</h4>
+        </div>
+
+        <div class="form-group has-danger has-success">
+            <label for="inputName">Naziv</label>
+            <input type="text" class="form-control" id="inputName" placeholder="Unesite naziv"
+                [ngClass]="{'is-invalid': nameCheck > 1, 'is-valid': nameCheck == 1}" [(ngModel)]="name" name="name"
+                required>
+            <small id="nameMsg" class="invalid-feedback">
+                <span *ngIf="nameCheck == 2">Ovo polje je obavezno</span>
+            </small>
+        </div>
+
+        <div class="form-group has-danger has-success">
+            <label for="inputPlace">Mesto</label>
+            <input type="text" class="form-control" id="inputPlace" placeholder="Unesite mesto"
+                [ngClass]="{'is-invalid': placeCheck > 1, 'is-valid': placeCheck == 1}" [(ngModel)]="place" name="place"
+                required>
+            <small id="placeMsg" class="invalid-feedback">
+                <span *ngIf="placeCheck == 2">Ovo polje je obavezno</span>
+            </small>
+        </div>
+
+        <div class="form-group has-danger has-success">
+            <label for="inputRows">Dužina (u metrima)</label>
+            <input type="number" min="1" class="form-control" id="inputRows" placeholder="Unesite dužinu"
+                [ngClass]="{'is-invalid': rowsCheck > 1, 'is-valid': rowsCheck == 1}" [(ngModel)]="rows" name="rows"
+                required>
+            <small id="rowsMsg" class="invalid-feedback">
+                <span *ngIf="rowsCheck == 2">Ovo polje je obavezno</span>
+                <span *ngIf="rowsCheck == 3">Dužina mora biti veća od 1 metar</span>
+                <span *ngIf="rowsCheck == 4">Dužina mora biti ceo broj</span>
+            </small>
+        </div>
+
+        <div class="form-group has-danger has-success">
+            <label for="inputCols">Širina (u metrima)</label>
+            <input type="number" min="1" class="form-control" id="inputCols" placeholder="Unesite širinu"
+                [ngClass]="{'is-invalid': colsCheck > 1, 'is-valid': colsCheck == 1}" [(ngModel)]="cols" name="cols"
+                required>
+            <small id="colsMsg" class="invalid-feedback">
+                <span *ngIf="colsCheck == 2">Ovo polje je obavezno</span>
+                <span *ngIf="colsCheck == 3">Širina mora biti veća od 1 metar</span>
+                <span *ngIf="colsCheck == 4">Širina mora biti ceo broj</span>
+            </small>
+        </div>
+
+        <div class="form-group d-flex justify-content-between">
+            <div><button type="submit" class="btn btn-primary" (click)="addGarden()">Dodaj</button></div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,113 @@
+<h2>Novi proizvod</h2>
+<br>
+<div class="container col-10">
+    <div class="alert alert-success alert-dismissible" *ngIf="successful">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h4 class="alert-heading">Uspešno ste dodali proizvod!</h4>
+    </div>
+
+    <mat-vertical-stepper [linear]="isLinear" #stepper>
+        <mat-step>
+            <form>
+                <ng-template matStepLabel>Unesite naziv proizvoda</ng-template>
+                <div class="form-group has-danger">
+                    <label for="inputName">Naziv proizvoda</label>
+                    <input class="form-control" id="inputName" placeholder="Naziv proizvoda"
+                        [ngClass]="{'is-invalid': nameCheck > 1}" [(ngModel)]="name" name="name" required>
+                    <small id="nameMsg" class="invalid-feedback">
+                        Ovo polje je obavezno
+                    </small>
+                </div>
+                <div>
+                    <button class="btn btn-primary" (click)="nameNext()">Dalje</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step>
+            <form>
+                <ng-template matStepLabel>Izaberite tip proizvoda</ng-template>
+                <div class="form-group">
+                    <label for="inputType">Tip proizvoda</label>
+                    <select class="form-control" id="inputType" [(ngModel)]="type" name="type" required>
+                        <option value='sadnica' [selected]="type == 'poljoprivrednik'">Sadnica</option>
+                        <option value='preparat' [selected]="type == 'preduzece'">Preparat</option>
+                    </select>
+                </div>
+                <div>
+                    <button class="btn btn-secondary" mat-button matStepperPrevious>Nazad</button>
+                    &nbsp;
+                    <button class="btn btn-primary" mat-button matStepperNext>Dalje</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step>
+            <form>
+                <ng-template matStepLabel>Unesite količinu</ng-template>
+                <div class="form-group has-danger">
+                    <label for="inputAmount" class="form-label">Količina</label>
+                    <input type="number" min="1" class="form-control" id="inputAmount" name="inputAmount"
+                        [(ngModel)]="amount" [ngClass]="{'is-invalid': amountCheck > 1}">
+                    <small class="invalid-feedback">
+                        Količina mora biti ceo broj veći od 0
+                    </small>
+                </div>
+                <div>
+                    <button class="btn btn-secondary" mat-button matStepperPrevious>Nazad</button>
+                    &nbsp;
+                    <button class="btn btn-primary" (click)="amountNext()">Dalje</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step>
+            <form>
+                <ng-template matStepLabel>
+                    <span *ngIf="type == 'sadnica'">Unesite vreme rasta (u danima)</span>
+                    <span *ngIf="type == 'preparat'">Unesite efekat na sadnice (u danima)</span>
+                </ng-template>
+                <div class="form-group has-danger">
+                    <label for="inputTime" class="col-form-label">
+                        <span *ngIf="type == 'sadnica'">Vreme rasta (u danima)</span>
+                        <span *ngIf="type == 'preparat'">Efekat na sadnice (u danima)</span>
+                    </label>
+                    <input type="number" min="1" class="form-control" id="inputTime" name="inputTime"
+                        [(ngModel)]="time" [ngClass]="{'is-invalid': timeCheck > 1}">
+                    <small class="invalid-feedback">
+                        Vreme mora biti ceo broj veći od 0
+                    </small>
+                </div>
+                <div>
+                    <button class="btn btn-secondary" mat-button matStepperPrevious>Nazad</button>
+                    &nbsp;
+                    <button class="btn btn-primary" (click)="timeNext()">Dalje</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step>
+            <form>
+                <ng-template matStepLabel>Unesite cenu (u dinarima)</ng-template>
+                <div class="form-group has-danger">
+                    <label for="inputPrice" class="col-form-label">Cena (u dinarima)</label>
+                    <input type="number" min="1" class="form-control" id="inputPrice" name="inputPrice"
+                        [(ngModel)]="price" [ngClass]="{'is-invalid': priceCheck > 1}">
+                    <small class="invalid-feedback">
+                        Cena mora biti ceo broj veći od 0
+                    </small>
+                </div>
+                <div>
+                    <button class="btn btn-secondary" mat-button matStepperPrevious>Nazad</button>
+                    &nbsp;
+                    <button class="btn btn-primary" (click)="priceNext()">Dalje</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>Kraj</ng-template>
+            <p>Potvrdite unos proizvoda.</p>
+            <div>
+                <button class="btn btn-secondary" mat-button matStepperPrevious>Nazad</button>
+                &nbsp;
+                <button class="btn btn-primary" mat-button (click)="addProduct()">Potvrdi</button>
+            </div>
+        </mat-step>
+    </mat-vertical-stepper>
+</div>
